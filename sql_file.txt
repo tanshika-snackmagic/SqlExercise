@@ -1,0 +1,80 @@
+sql> select * from tastes;
++-------+---------+
+| Name  | Filling |
++-------+---------+
+| Brown | Turkey  |
+| Brown | Beef    |
+| Brown | Ham     |
+| Jones | Cheese  |
+| Green | Beef    |
+| Green | Turkey  |
+| Green | Cheese  |
++-------+---------+
+
+sql> select * from locations;
++---------+---------+---------------+
+| Lname   | Phone   | Address       |
++---------+---------+---------------+
+| Buttery | 7023421 | College St    |
+| Linclon | 6834523 | Linclon Place |
+| Old Nag | 7678132 | Dame St       |
+| ONeil   | 6742134 | Pearse St     |
++---------+---------+---------------+
+
+sql> select * from Sandwich;
++----------+-------+---------+-------+
+| Location | Bread | filling | Price |
++----------+-------+---------+-------+
+| Linclon  | Rye   | Ham     |  1.25 |
+| ONeil    | White | Cheese  |   1.2 |
+| ONeil    | Whole | Ham     |  1.25 |
+| Old Nag  | Rye   | Beef    |  1.35 |
+| Buttery  | White | Cheese  |     1 |
+| ONeil    | White | Turkey  |  1.35 |
+| Buttery  | White | Ham     |   1.1 |
+| Linclon  | Rye   | Beef    |  1.35 |
+| Linclon  | White | Ham     |   1.3 |
+| Old Nag  | Rye   | Ham     |   1.4 |
++----------+-------+---------+-------+
+
+Questions:
+Write SQL statements to retrieve the following information:
+(i) places where Jones can eat (using a nested subquery).
+mysql> select location from (select location, name from sandwich,tastes where sandwich.filling=tastes.filling and name='Jones') as NewTanle;
++----------+
+| location |
++----------+
+| ONeil    |
+| Buttery  |
++----------+
+2 rows in set (0.00 sec)
+
+(ii) places where Jones can eat (without using a nested subquery).
+mysql> select location from sandwich s, tastes t where s.filling=t.filling and t.name='Jones';
++----------+
+| location |
++----------+
+| ONeil    |
+| Buttery  |
++----------+
+2 rows in set (0.00 sec)
+
+(iii) for each location the number of people who can eat there. 
+mysql> select distinct location, name  from tastes join sandwich
+    -> where sandwich.filling=tastes.filling
+    -> order by location;
++----------+-------+
+| location | name  |
++----------+-------+
+| Buttery  | Green |
+| Buttery  | Brown |
+| Buttery  | Jones |
+| Linclon  | Green |
+| Linclon  | Brown |
+| Old Nag  | Brown |
+| Old Nag  | Green |
+| ONeil    | Green |
+| ONeil    | Brown |
+| ONeil    | Jones |
++----------+-------+
+10 rows in set (0.00 sec)

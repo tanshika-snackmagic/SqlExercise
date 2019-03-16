@@ -1,0 +1,100 @@
+
+
+mysql> select * from Branch;
++-------+---------------+---------------+
+| Bcode | Librarian     | Address       |
++-------+---------------+---------------+
+| B1    | John Smith    | 2 Anglesea Rd |
+| B2    | Mary Jones    | 34 Pearse St  |
+| B3    | Francis Owens | Grange X      |
++-------+---------------+---------------+
+3 rows in set (0.00 sec)
+
+
+mysql> select * from titles;
++---------------------+---------------+------------+
+| Title               | Author        | Publisher  |
++---------------------+---------------+------------+
+| A history of Dublin | David Little  | Wiley      |
+| Computers           | Blaise Pascal | Applewoods |
+| How to Fish         | Amy Fly       | Stop Press |
+| Susannah            | Ann Brown     | Macmillan  |
+| The Wife            | Ann Brown     | Macmillan  |
++---------------------+---------------+------------+
+5 rows in set (0.00 sec)
+
+
+mysql> select * from Holdings;
++--------+---------------------+--------+
+| Branch | Title               | copies |
++--------+---------------------+--------+
+| B1     | Susannah            |      3 |
+| B1     | How to Fish         |      2 |
+| B1     | A History of Dublin |      1 |
+| B2     | How to Fish         |      4 |
+| B2     | Computers           |      2 |
+| B2     | The Wife            |      3 |
+| B3     | A History of Dublin |      1 |
+| B3     | Computers           |      4 |
+| B3     | Susannah            |      3 |
+| B3     | The Wife            |      1 |
++--------+---------------------+--------+
+10 rows in set (0.00 sec)
+
+
+Write SQL statements to retrieve the following information:
+(i)the names of all library books published by Macmillan.
+mysql> select Title from Titles
+    -> where Publisher='Macmillan';
++----------+
+| Title    |
++----------+
+| Susannah |
+| The Wife |
++----------+
+(ii)branches that hold any books by Ann Brown (using a nested subquery).
+mysql> select distinct branch from (select branch, author from titles, holdings where titles.title=holdings.title and author='Ann Brown') as BranchTable;
++--------+
+| branch |
++--------+
+| B1     |
+| B3     |
+| B2     |
++--------+
+
+(iii)branches that hold any books by Ann Brown (without using a nested subquery).
+mysql> select distinct Branch from titles join holdings
+    -> where titles.title=holdings.title and author='Ann brown';
++--------+
+| Branch |
++--------+
+| B1     |
+| B3     |
+| B2     |
++--------+
+3 rows in set (0.00 sec)
+(iv)the total number of books held at each branch. 
+mysql> select Branch, sum(copies) as Total_no_of_Books
+    -> from holdings
+    -> group by branch;
++--------+-------------------+
+| Branch | Total_no_of_Books |
++--------+-------------------+
+| B1     |                 6 |
+| B2     |                 9 |
+| B3     |                 9 |
++--------+-------------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
